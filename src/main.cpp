@@ -245,7 +245,7 @@ std::string int_array_to_json_array(const std::vector<int>& arr)
 		json.append(buf);
 	}
 
-	json.append("];");
+	json.append("]");
 
 	return json;
 }
@@ -273,7 +273,7 @@ std::string vec4_array_to_json_array(const std::vector<vec4>& arr)
 		json.append(buf);
 	}
 
-	json.append("];");
+	json.append("]");
 
 	return json;
 }
@@ -297,7 +297,7 @@ std::string vec2_array_to_json_array(const std::vector<vec2>& arr)
 		json.append(buf);
 	}
 
-	json.append("];");
+	json.append("]");
 
 	return json;
 }
@@ -363,7 +363,7 @@ polygroup_denormalized* denormalize_polygroup(polygroup& pg)
 
 
 
-void polygroup_to_json(const char* ns, polygroup& pg, const char* jsonFilename)
+void polygroup_to_js(const char* ns, polygroup& pg, const char* jsonFilename)
 {
 	std::string nsInit = "var ";
 	nsInit.append(ns);
@@ -422,27 +422,83 @@ void polygroup_to_json(const char* ns, polygroup& pg, const char* jsonFilename)
 	dpg = NULL;
 }
 
+
+
+void polygroup_to_json(polygroup& pg, const char* jsonFilename)
+{
+	echo("denormalizing polygroup...");
+	polygroup_denormalized* dpg = denormalize_polygroup(pg);
+
+	echo("making verts array...");
+	std::string vertsStr = "";
+	vertsStr.append("\"verts\":");
+	vertsStr.append(vec4_array_to_json_array(dpg->verts));
+	vertsStr.append(",");
+
+	echo("making indices array...");
+	std::string indicesStr = "";
+	indicesStr.append("\"indices\":");
+	indicesStr.append(int_array_to_json_array(dpg->indexbuf));
+	indicesStr.append(",");
+
+	echo("making texcoords array...");
+	std::string texcoordsStr = "";
+	texcoordsStr.append("\"texcoords\":");
+	if(dpg->texcoords.size() > 0) {
+		texcoordsStr.append(vec2_array_to_json_array(dpg->texcoords));
+	} else { 
+		texcoordsStr.append("[]");
+	}
+	texcoordsStr.append(",");
+
+	echo("making normals array...");
+	std::string normalsStr = "";
+	normalsStr.append("\"normals\":");
+	if(dpg->normals.size() > 0) {
+		normalsStr.append(vec4_array_to_json_array(dpg->normals));
+	} else {
+		normalsStr.append("[]");
+	}
+
+
+	echo("writing output file...");
+	FILE *fp = fopen(jsonFilename, "w");
+	fputs("{", fp);
+	fputs(vertsStr.c_str(), fp);
+	fputs("\n", fp);	
+	fputs(indicesStr.c_str(), fp);
+	fputs("\n", fp);
+	fputs(texcoordsStr.c_str(), fp);
+	fputs("\n", fp);
+	fputs(normalsStr.c_str(), fp);
+	fputs("}", fp);
+	fclose(fp);
+
+	delete dpg;
+	dpg = NULL;
+}
+
+
 int main(int argc, char *argv[])
 {
 
 	echo("OBJ to JSON converter");
 
-	if(argc < 4) {
+	if(argc < 3) {
 		echo("ERROR: Invalid arguments");
-		echo("ARGS: wavefrontOBJtoJSON.exe <inputFile> <outputFile> <geometryNamespace>");
+		echo("ARGS: wavefrontOBJtoJSON.exe <inputFile> <outputFile>");
 		return 0;
 	}
 
 	char* inputFilename = argv[1];
 	char* outputFilename = argv[2];
-	char* ns = argv[3];
 
 	echo("reading OBJ data into polygroup...");
 	std::vector<polygroup*> pg = polygroups_from_obj(inputFilename);
 
 	if(pg.size() > 0) {
 		echo("converting polygroup to JSON arrays...");
-		polygroup_to_json(ns, *pg[0], outputFilename);
+		polygroup_to_json(*pg[0], outputFilename);
 	}
 
 	// cleanup
