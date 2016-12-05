@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wavefront-obj-to-json-converter", "wavefront-obj-to-json-converter.vcxproj", "{91241078-196F-401F-BB7D-4A0B7ACC724B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91241078-196F-401F-BB7D-4A0B7ACC724B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{91241078-196F-401F-BB7D-4A0B7ACC724B}.Debug|Win32.Build.0 = Debug|Win32
+		{91241078-196F-401F-BB7D-4A0B7ACC724B}.Release|Win32.ActiveCfg = Release|Win32
+		{91241078-196F-401F-BB7D-4A0B7ACC724B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
