@@ -9,7 +9,7 @@ Extracts:
  - Texture coordinates
  - Vertex normals
 
-##Usage
+## Usage
 
  `wavefrontOBJtoJSON.exe <inputFile> <outputFile>`
 
